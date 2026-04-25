@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Kilit Ekranı</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+  <style>
+    body {
+      margin: 0;
+      height: 100vh;
+      background: linear-gradient(135deg, #ff9a9e, #fad0c4);
+      font-family: 'Poppins', sans-serif;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      color: white;
+      overflow: hidden;
+    }
+
+    .lock-screen {
+      text-align: center;
+    }
+
+    .dots {
+      display: flex;
+      justify-content: center;
+      gap: 10px;
+      margin: 20px 0;
+    }
+
+    .dot {
+      width: 15px;
+      height: 15px;
+      border-radius: 50%;
+      background: rgba(255,255,255,0.4);
+    }
+
+    .dot.active {
+      background: white;
+    }
+
+    .keypad {
+      display: grid;
+      grid-template-columns: repeat(3, 70px);
+      gap: 15px;
+      justify-content: center;
+    }
+
+    .key {
+      width: 70px;
+      height: 70px;
+      border-radius: 50%;
+      background: rgba(255,255,255,0.2);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      font-size: 22px;
+      cursor: pointer;
+      transition: transform 0.15s;
+    }
+
+    .key:active {
+      transform: scale(0.9);
+      background: rgba(255,255,255,0.4);
+    }
+
+    #content {
+      display: none;
+      font-size: 24px;
+      cursor: pointer;
+    }
+
+    .heart, .flower {
+      position: absolute;
+      font-size: 22px;
+      animation: fall 3s linear forwards;
+    }
+
+    @keyframes fall {
+      0% { transform: translateY(-50px); opacity: 1; }
+      100% { transform: translateY(100vh); opacity: 0; }
+    }
+  </style>
+</head>
+<body>
+
+<div class="lock-screen" id="lockScreen">
+  <h2>🔒 Kilit Aç</h2>
+  <div class="dots" id="dots">
+    <div class="dot"></div>
+    <div class="dot"></div>
+    <div class="dot"></div>
+    <div class="dot"></div>
+  </div>
+
+  <div class="keypad">
+    <div class="key" onclick="press(1)">1</div>
+    <div class="key" onclick="press(2)">2</div>
+    <div class="key" onclick="press(3)">3</div>
+    <div class="key" onclick="press(4)">4</div>
+    <div class="key" onclick="press(5)">5</div>
+    <div class="key" onclick="press(6)">6</div>
+    <div class="key" onclick="press(7)">7</div>
+    <div class="key" onclick="press(8)">8</div>
+    <div class="key" onclick="press(9)">9</div>
+    <div></div>
+    <div class="key" onclick="press(0)">0</div>
+    <div class="key" onclick="clearInput()">⌫</div>
+  </div>
+</div>
+
+<div id="content" onclick="startEffect()">
+  💖 Bana Dokun 💖
+</div>
+
+<script>
+  const correctPassword = "2564";
+  let input = "";
+
+  function press(num) {
+    if (input.length < 4) {
+      input += num;
+      updateDots();
+    }
+
+    if (input.length === 4) {
+      setTimeout(checkPassword, 200);
+    }
+  }
+
+  function clearInput() {
+    input = "";
+    updateDots();
+  }
+
+  function updateDots() {
+    const dots = document.querySelectorAll('.dot');
+    dots.forEach((dot, i) => {
+      dot.classList.toggle('active', i < input.length);
+    });
+  }
+
+  function checkPassword() {
+    if (input === correctPassword) {
+      document.getElementById('lockScreen').style.display = 'none';
+      document.getElementById('content').style.display = 'block';
+    } else {
+      input = "";
+      updateDots();
+      alert("Yanlış şifre!");
+    }
+  }
+
+  function createElement(type) {
+    const el = document.createElement("div");
+    el.classList.add(type);
+    el.innerText = type === "heart" ? "❤️" : "🌸";
+
+    el.style.left = Math.random() * window.innerWidth + "px";
+    el.style.top = "-20px";
+
+    document.body.appendChild(el);
+
+    setTimeout(() => el.remove(), 3000);
+  }
+
+  function startEffect() {
+    for (let i = 0; i < 25; i++) {
+      setTimeout(() => createElement("heart"), i * 80);
+      setTimeout(() => createElement("flower"), i * 100);
+    }
+  }
+</script>
+
+</body>
+</html>
